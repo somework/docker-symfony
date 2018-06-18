@@ -1,21 +1,26 @@
-FROM debian:jessie
+FROM nginx:1.15.0-alpine
 
-MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
+MAINTAINER Igor Pinchuk <i.pinchuk.work@gmail.com>
 
-RUN apt-get update && apt-get install -y \
-    nginx
+RUN addgroup -g 1000 -S alpine-www-data \
+    && adduser -u 1000 -D -S -G alpine-www-data alpine-www-data
+
+RUN mkdir etc/nginx/sites-available
+RUN mkdir etc/nginx/sites-enabled
 
 ADD nginx.conf /etc/nginx/
 ADD symfony.conf /etc/nginx/sites-available/
 
-RUN ln -s /etc/nginx/sites-available/symfony.conf /etc/nginx/sites-enabled/symfony
-RUN rm /etc/nginx/sites-enabled/default
+
+RUN ln -s /etc/nginx/sites-available/symfony.conf /etc/nginx/sites-enabled/symfony.conf
+
+RUN rm /etc/nginx/conf.d/default.conf
 
 RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
 
-RUN usermod -u 1000 www-data
-
 CMD ["nginx"]
+
+WORKDIR "/var/www/symfony"
 
 EXPOSE 80
 EXPOSE 443

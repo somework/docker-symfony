@@ -1,38 +1,77 @@
-version: '2'
+version: '3.6'
 
 services:
-    db:
-        image: mysql
-        volumes:
-            - "./.data/db:/var/lib/mysql"
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     php:
-        build:
-            context: php7-fpm
-            args:
-                TIMEZONE: ${TIMEZONE}
+        build: php-fpm
         volumes:
+            # Time Zone and Local Time
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
             - ${SYMFONY_APP_PATH}:/var/www/symfony
-            - ./logs/symfony:/var/www/symfony/app/logs
+#            - logs/symfony:/var/www/symfony/app/logs
+        networks:
+            - project
+
+    pgsql:
+        image: postgres:alpine
+        restart: always
+        volumes:
+            # Time Zone and Local Time
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+            - pgsqldata:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        networks:
+            - project
+
     nginx:
         build: nginx
         ports:
             - 80:80
-        volumes_from:
-            - php
         volumes:
-            - ./logs/nginx/:/var/log/nginx
-    elk:
-        image: willdurand/elk
-        ports:
-            - 81:80
-        volumes:
-            - ./elk/logstash:/etc/logstash
-            - ./elk/logstash/patterns:/opt/logstash/patterns
-        volumes_from:
-            - php
-            - nginx
+            # Time Zone and Local Time
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+            - ${SYMFONY_APP_PATH}:/var/www/symfony
+#            - logs/nginx/:/var/log/nginx
+        networks:
+            - project
+
+networks:
+    project:
+        driver: bridge
+
+volumes:
+    pgsqldata:
+        external: false
+    logs:
+
+
+
+#    nginx:
+#        build: nginx
+#        ports:
+#            - 80:80
+#        volumes_from:
+#            - php
+#        volumes:
+#            # Time Zone and Local Time
+#            - /etc/localtime:/etc/localtime:ro
+#            - /etc/timezone:/etc/timezone:ro
+#            - ./logs/nginx/:/var/log/nginx
+#    elk:
+#        image: willdurand/elk
+#        ports:
+#            - 81:80
+#        volumes:
+#            - /etc/localtime:/etc/localtime:ro
+#            - /etc/timezone:/etc/timezone:ro
+#
+#            - ./elk/logstash:/etc/logstash
+#            - ./elk/logstash/patterns:/opt/logstash/patterns
+#        volumes_from:
+#            - php
+#            - nginx
