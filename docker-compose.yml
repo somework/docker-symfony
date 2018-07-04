@@ -15,7 +15,7 @@ services:
 
     php-pm:
         build: php-pm
-        command: start --debug=1 --app-env=dev --bootstrap=symfony --static-directory=/var/www/public --host=0.0.0.0
+        command: start
         volumes:
             # Time Zone and Local Time
             - /etc/localtime:/etc/localtime:ro

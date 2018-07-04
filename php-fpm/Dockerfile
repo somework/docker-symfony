@@ -3,6 +3,8 @@ FROM alpine:3.7
 MAINTAINER Igor Pinchuk <i.pinchuk.work@gmail.com>
 
 ENV TIMEZONE ${TIMEZONE:-"Europe/Moscow"}
+ENV LC_ALL ${LC_ALL:-"ru_RU.UTF-8"}
+ENV LANG ${LANG:-"ru_RU.UTF-8"}
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
