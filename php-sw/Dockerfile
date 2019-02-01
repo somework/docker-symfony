@@ -7,9 +7,9 @@ ENV SWOOLE_PORT ${SWOOLE_PORT:-8080}
 
 USER root
 
-RUN apk del php7.2-fpm \
-    && apk add --no-cache \
-        php7.2-swooole
+RUN apk del php7.2-fpm
+RUN apk add --no-cache \
+        php7.2-swoole
 
 #RUN mkdir /ppm \
 #    && chown alpine-www-data.alpine-www-data /ppm
@@ -24,6 +24,6 @@ USER alpine-www-data
 WORKDIR /var/www
 
 #ADD run-ppm.sh /etc/app/run.sh
-#ENTRYPOINT ["/bin/sh", "/etc/app/run.sh"]
+ENTRYPOINT ["/usr/bin/php", "/var/www/public/sw.php"]
 
 EXPOSE 8080

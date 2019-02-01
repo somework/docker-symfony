@@ -26,7 +26,8 @@ ENV ENV_DEPS="git \
             icu \
             libpng \
             libjpeg-turbo \
-            ca-certificates"
+            ca-certificates \
+            bash"
 
 ENV PHP_DEPS="php7.2 \
               php7.2-fpm \
@@ -102,6 +103,13 @@ RUN rm -rf /tmp/* \
 WORKDIR /var/www
 
 USER alpine-www-data
+
+RUN curl -sS https://get.symfony.com/cli/installer | bash
+
+RUN echo 'export PATH="$HOME/.symfony/bin:$PATH"' > ~/.profile
+
+RUN git config --global user.email "i.pinchuk.work@gmail.com"
+RUN git config --global user.name "Igor Pinchuk"
 
 EXPOSE 9000
 CMD ["php-fpm"]

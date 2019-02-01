@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
     php-fpm:
-        image: project-php-fpm
+#        image: project-php-fpm
         build: php-fpm
         volumes:
             # Time Zone and Local Time
@@ -13,17 +13,28 @@ services:
         networks:
             - project
 
-    php-pm:
-        build: php-pm
-        command: start
-        volumes:
-            # Time Zone and Local Time
-            - /etc/localtime:/etc/localtime:ro
-            - /etc/timezone:/etc/timezone:ro
-            - ${SYMFONY_APP_PATH}:/var/www
-#            - logs/symfony:/var/www/symfony/app/logs
-        networks:
-            - project
+#    php-pm:
+#        build: php-pm
+#        command: start
+#        volumes:
+#            # Time Zone and Local Time
+#            - /etc/localtime:/etc/localtime:ro
+#            - /etc/timezone:/etc/timezone:ro
+#            - ${SYMFONY_APP_PATH}:/var/www
+##            - logs/symfony:/var/www/symfony/app/logs
+#        networks:
+#            - project
+#
+#    php-sw:
+#        build: php-sw
+#        volumes:
+#            # Time Zone and Local Time
+#            - /etc/localtime:/etc/localtime:ro
+#            - /etc/timezone:/etc/timezone:ro
+#            - ${SYMFONY_APP_PATH}:/var/www
+##            - logs/symfony:/var/www/symfony/app/logs
+#        networks:
+#            - project
 
     pgsql:
         image: postgres:alpine
