@@ -59,7 +59,8 @@ ENV PHP_DEPS="php7.2 \
               php7.2-xmlwriter \
               php7.2-phar \
               php7.2-zlib \
-              php7.2-intl"
+              php7.2-intl \
+              php7.2-dev"
 
 
 # PHP.earth Alpine repository for better developer experience
@@ -96,6 +97,16 @@ RUN addgroup -g 1000 -S alpine-www-data \
     && adduser -u 1000 -D -S -G alpine-www-data alpine-www-data
 RUN mkdir -p /var/log/php/7.2/ \
     && chown alpine-www-data:alpine-www-data /var/log/php/7.2/
+
+# Install Tideways and Configure
+RUN cd /root && \
+	git clone https://github.com/tideways/php-profiler-extension.git && \
+	cd php-profiler-extension && \
+	phpize && \
+	./configure  CFLAGS="-O2 -g" --enable-tideways  --enable-shared  --with-php-config=/usr/bin/php-config && \
+	make -j `cat /proc/cpuinfo | grep processor | wc -l` && \
+	make install
+COPY tideways.ini /etc/php/7.2/conf.d/tideways.ini
 
 RUN rm -rf /tmp/* \
     && rm -rf /var/cache/apk/*

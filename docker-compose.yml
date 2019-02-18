@@ -12,30 +12,6 @@ services:
 #            - logs/symfony:/var/www/symfony/app/logs
         networks:
             - project
-
-#    php-pm:
-#        build: php-pm
-#        command: start
-#        volumes:
-#            # Time Zone and Local Time
-#            - /etc/localtime:/etc/localtime:ro
-#            - /etc/timezone:/etc/timezone:ro
-#            - ${SYMFONY_APP_PATH}:/var/www
-##            - logs/symfony:/var/www/symfony/app/logs
-#        networks:
-#            - project
-#
-#    php-sw:
-#        build: php-sw
-#        volumes:
-#            # Time Zone and Local Time
-#            - /etc/localtime:/etc/localtime:ro
-#            - /etc/timezone:/etc/timezone:ro
-#            - ${SYMFONY_APP_PATH}:/var/www
-##            - logs/symfony:/var/www/symfony/app/logs
-#        networks:
-#            - project
-
     pgsql:
         image: postgres:alpine
         restart: always
@@ -63,6 +39,28 @@ services:
 #            - logs/nginx/:/var/log/nginx
         networks:
             - project
+#    elasticsearch:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
+#        container_name: elasticsearch
+#        environment:
+#            - cluster.name=single-node
+#            - bootstrap.memory_lock=true
+#            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#        ulimits:
+#            memlock:
+#                soft: -1
+#                hard: -1
+#        volumes:
+#            - elkdata:/usr/share/elasticsearch/data
+#        ports:
+#            - 9200:9200
+#        networks:
+#            - project
+
+    tideways:
+        build: ./tideways
+        networks:
+          - project
 
 networks:
     project:
@@ -71,6 +69,8 @@ networks:
 volumes:
     pgsqldata:
         external: false
+#    elkdata:
+#        driver: local
     logs:
 
 
