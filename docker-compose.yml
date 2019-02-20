@@ -10,6 +10,8 @@ services:
             - /etc/timezone:/etc/timezone:ro
             - ${SYMFONY_APP_PATH}:/var/www
 #            - logs/symfony:/var/www/symfony/app/logs
+            - xhgui:/usr/local/src/xhgui
+            - ./xhgui-config.php:/usr/local/src/xhgui/config/config.php
         networks:
             - project
     pgsql:
@@ -37,8 +39,22 @@ services:
             - /etc/timezone:/etc/timezone:ro
             - ${SYMFONY_APP_PATH}:/var/www
 #            - logs/nginx/:/var/log/nginx
+            - xhgui:/usr/local/src/xhgui
         networks:
             - project
+    tideways:
+        build: ./tideways
+        networks:
+            - project
+    xhgui:
+        image: edyan/xhgui:php7.2
+        # I need to access xhgui
+        volumes:
+            - xhgui:/usr/local/src/xhgui
+            - ./xhgui-config.php:/usr/local/src/xhgui/config/config.php
+        networks:
+          - project
+
 #    elasticsearch:
 #        image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
 #        container_name: elasticsearch
@@ -57,10 +73,6 @@ services:
 #        networks:
 #            - project
 
-    tideways:
-        build: ./tideways
-        networks:
-          - project
 
 networks:
     project:
@@ -69,6 +81,7 @@ networks:
 volumes:
     pgsqldata:
         external: false
+    xhgui:
 #    elkdata:
 #        driver: local
     logs:

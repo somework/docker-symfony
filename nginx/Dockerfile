@@ -11,10 +11,12 @@ RUN mkdir etc/nginx/sites-enabled
 ADD nginx.conf /etc/nginx/
 
 ADD symfony.conf /etc/nginx/sites-available/
-ADD psymfony.conf /etc/nginx/sites-available/
-ADD swsymfony.conf /etc/nginx/sites-available/
+ADD xhgui.conf /etc/nginx/sites-available/
+#ADD psymfony.conf /etc/nginx/sites-available/
+#ADD swsymfony.conf /etc/nginx/sites-available/
 
 RUN ln -s /etc/nginx/sites-available/symfony.conf /etc/nginx/sites-enabled/symfony.conf
+RUN ln -s /etc/nginx/sites-available/xhgui.conf /etc/nginx/sites-enabled/xhgui.conf
 #RUN ln -s /etc/nginx/sites-available/psymfony.conf /etc/nginx/sites-enabled/psymfony.conf
 #RUN ln -s /etc/nginx/sites-available/swsymfony.conf /etc/nginx/sites-enabled/swsymfony.conf
 

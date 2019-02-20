@@ -60,6 +60,7 @@ ENV PHP_DEPS="php7.2 \
               php7.2-phar \
               php7.2-zlib \
               php7.2-intl \
+              php7.2-mongodb \
               php7.2-dev"
 
 
